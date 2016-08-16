@@ -410,6 +410,7 @@ class MongoSource(object):
         code, exchange = code_exchange.split('.')
         colname = self.__get_collection_name(strdt, exchange, code)
         ts = map(lambda dt: datautil.encode2id(strdt, dt), tbdata['datetime'])
+        volume = map(lambda v: int(v), tbdata['volume'])
         ids, utimes = zip(*ts)
         data = map(lambda (_id, _datetime,
                            _open, _close,
@@ -420,7 +421,7 @@ class MongoSource(object):
             'high': _high, 'low': _low,
             'volume': _volume
         }, zip(ids, tbdata['datetime'], tbdata['open'], tbdata['close'],
-               tbdata['high'], tbdata['low'], tbdata['volume']))
+               tbdata['high'], tbdata['low'], volume))
         self.db[colname].insert_many(data)
 
     def import_contracts(self, data):

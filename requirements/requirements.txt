@@ -5,3 +5,4 @@ matplotlib
 python-dateutil>=2.4.2
 TA-Lib>= 0.4.8
 progressbar2>=3.6.2
+zmq

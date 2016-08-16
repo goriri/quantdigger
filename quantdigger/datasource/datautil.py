@@ -123,9 +123,9 @@ def import_tdx_stock(path, ld):
         ld (LocalData): 本地数据库对象
     """
     from datetime import datetime, timedelta
-    from quantdigger.util import ProgressBar
+    from progressbar import ProgressBar
     for path, dirs, files in os.walk(path):
-        progressbar = ProgressBar(total=len(files))
+        progressbar = ProgressBar(maxval=len(files))
         for file_ in files:
             filepath = path + os.sep + file_
             if filepath.endswith(".txt"):
@@ -159,8 +159,8 @@ def import_tdx_stock(path, ld):
                     code = t[1].split('.')[0]
                     strpcon = "".join([code, '.', exch, '-', '1.Day'])
                     ld.import_bars(data, strpcon)
-            progressbar.move()
-            progressbar.log('')
+            progressbar.start()
+            progressbar.update('')
     return
 
 
@@ -172,7 +172,7 @@ def import_from_csv(self, paths):
             print(path)
             raise Exception("错误的文件格式")
         print("import: ", path)
-        df = pd.read_csv(path, parse_dates='datetime')
+        df = pd.read_csv(path)
         try:
             df['datetime'] = map(
                 lambda x: datetime.datetime.strptime(x, "%Y-%m-%d %H:%M:%S"),
@@ -198,7 +198,7 @@ def import_data(fpaths, ld):
             print(path)
             raise Exception("错误的文件格式")
         print("import data: ", path)
-        df = pd.read_csv(path, parse_dates='datetime')
+        df = pd.read_csv(path)
         try:
             df['datetime'] = map(
                 lambda x: datetime.datetime.strptime(x, "%Y-%m-%d %H:%M:%S"),
@@ -207,7 +207,7 @@ def import_data(fpaths, ld):
             df['datetime'] = map(
                 lambda x: datetime.datetime.strptime(x, "%Y-%m-%d"),
                 df['datetime'])
-        strpcon = path.split(os.path.sep)[-1].rstrip('.csv')
+        strpcon = path.split('/')[-1].rstrip('.csv')
         ld.import_bars(df, strpcon)
 
 
